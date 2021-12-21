@@ -4,6 +4,7 @@ import pandas as pd
 import time 
 
 server_url = 'https://api.upbit.com'
+line_target_url = 'https://notify-api.line.me/api/notify'
 
 def send_request(reqType, reqUrl, reqParam, reqHeader):
     try:
@@ -73,6 +74,18 @@ def get_candle(target_item, tick_kind, inq_range):
         logging.debug(candle_data)
  
         return candle_data
+
+    except Exception:
+        raise
+
+def send_line_message(message, line_token):
+    try:
+        headers = {'Authorization': 'Bearer ' + line_token}
+        data = {'message': message}
+ 
+        response = requests.post(line_target_url, headers=headers, data=data)        
+ 
+        return response
 
     except Exception:
         raise
