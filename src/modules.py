@@ -144,3 +144,35 @@ def get_macd(candle_data, loop_cnt):
 
     except Exception:
         raise
+		
+def get_mfi(candle_data):
+    try:
+        mfi_list = []
+
+        df = pd.DataFrame(candle_data)
+        dfDt = df['candle_date_time_kst'].iloc[::-1]
+ 
+        df['typical_price'] = (df['trade_price'] + df['high_price'] + df['low_price']) / 3
+        df['money_flow'] = df['typical_price'] * df['candle_acc_trade_volume']
+ 
+        positive_mf = 0
+        negative_mf = 0
+ 
+        for i in range(0, 14):
+ 
+            if df["typical_price"][i] > df["typical_price"][i + 1]:
+                positive_mf = positive_mf + df["money_flow"][i]
+            elif df["typical_price"][i] < df["typical_price"][i + 1]:
+                negative_mf = negative_mf + df["money_flow"][i]
+ 
+        if negative_mf > 0:
+            mfi = 100 - (100 / (1 + (positive_mf / negative_mf)))
+        else:
+            mfi = 100 - (100 / (1 + (positive_mf)))
+ 
+        mfi_list.append({"type": "MFI", "DT": dfDt[0], "MFI": round(mfi, 4)})
+ 
+        return mfi_list
+		
+    except Exception:
+        raise
