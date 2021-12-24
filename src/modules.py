@@ -223,3 +223,23 @@ def get_williams(candle_data):
  
     except Exception:
         raise
+
+def get_cci(candle_data, loop_cnt):
+    try:
+        cci_list = []
+ 
+        df = pd.DataFrame(candle_data)
+        ordered_df = df.sort_values(by=['candle_date_time_kst'], ascending=[True])
+ 
+        ordered_df['TP'] = (ordered_df['high_price'] + ordered_df['low_price'] + ordered_df['trade_price']) / 3
+        ordered_df['SMA'] = ordered_df['TP'].rolling(window=20).mean()
+        ordered_df['MAD'] = ordered_df['TP'].rolling(window=20).apply(lambda x: pd.Series(x).mad())
+        ordered_df['CCI'] = (ordered_df['TP'] - ordered_df['SMA']) / (0.015 * ordered_df['MAD'])
+
+        for i in range(0, loop_cnt):            
+            cci_list.append({"type": "CCI", "DT": ordered_df['candle_date_time_kst'].loc[i], "CCI": round(ordered_df['CCI'].loc[i], 4)})
+ 
+        return cci_list
+
+    except Exception:
+        raise
