@@ -200,3 +200,26 @@ def get_bb(candle_data):
 
     except Exception:
         raise
+		
+def get_williams(candle_data):
+    try:
+        williams_list = []
+ 
+        df = pd.DataFrame(candle_data)
+        dfDt = df['candle_date_time_kst'].iloc[::-1]
+        df = df.iloc[:14]
+ 
+        hh = numpy.max(df['high_price'])
+        ll = numpy.min(df['low_price'])
+        cp = df['trade_price'][0]
+ 
+        w = (hh - cp) / (hh - ll) * -100
+ 
+        williams_list.append(
+            {"type": "WILLIAMS", "DT": dfDt[0], "HH": round(hh, 4), "LL": round(ll, 4), "CP": round(cp, 4),
+            "W": round(w, 4)})
+ 
+        return williams_list
+ 
+    except Exception:
+        raise
