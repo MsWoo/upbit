@@ -36,5 +36,11 @@ while True:
         now_rsi = modules.get_rsi(candle_data)
         now_macd = modules.get_macd(candle_data, 1)
         now_mfi = modules.get_mfi(candle_data)
+		
+		if now_rsi <= 30:
+			# Buy module
+			
+		elif now_rsi >= 70:
+			# Sell module
 
         time.sleep(1)
