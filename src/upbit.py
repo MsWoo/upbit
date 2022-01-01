@@ -8,6 +8,16 @@ secret = 'secret key
 
 upbit = pyupbit.Upbit(access, secret)
 
+def buy(coin): 
+    money = upbit.get_balance("KRW") 
+    res = upbit.buy_market_order(coin, money) 
+    return 
+
+def sell(coin): 
+    amount = upbit.get_balance(coin)
+    res = upbit.sell_market_order(coin, amount)
+    return
+
 def load_markets():
     markets = pyupbit.get_tickers()
     for market in markets:
@@ -38,9 +48,9 @@ while True:
         now_mfi = modules.get_mfi(candle_data)
 		
 		if now_rsi <= 30:
-			# Buy module
+			buy(krw_markets[i])
 			
 		elif now_rsi >= 70:
-			# Sell module
+			sell(krw_markets[i])
 
         time.sleep(1)
